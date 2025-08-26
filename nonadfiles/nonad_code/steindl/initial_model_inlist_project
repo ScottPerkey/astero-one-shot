@@ -1,0 +1,92 @@
+! inlist to evolve a 15 solar mass star
+
+! For the sake of future readers of this file (yourself included),
+! ONLY include the controls you are actually using.  DO NOT include
+! all of the other controls that simply have their default values.
+
+&star_job
+
+  ! begin with a pre-main sequence model
+    create_pre_main_sequence_model = .true.
+
+  ! save a model at the end of the run
+  	save_model_when_terminate = .true.
+  	save_model_filename = "r1_5_mesh05_maxdq_20ppm_Op09_lowT_tau100_ml18_z0014"
+
+  ! display on-screen plots
+    pgstar_flag = .false.
+
+
+! change form lnd to lnPgas
+	change_lnPgas_flag = .true.
+	new_lnPgas_flag = .true.
+
+! set opacity tables
+	kappa_file_prefix = 'OP_a09_nans_removed_by_hand'
+
+
+! set initial composition and nuclear reaction network
+  	set_uniform_initial_composition = .true.
+  	initial_zfracs = 8 ! GS98_zfracs = 3   
+  	initial_h1 = 0.7192553948
+  	initial_h2 = 0.0                     !set in run_star_extras
+  	initial_he3 = 0.0000279481
+  	initial_he4 = 0.2794532307
+
+	change_net = .true.
+	new_net_name = 'pp_and_cno_extras.net' 
+	change_initial_net = .true.
+	set_initial_age = .true.
+	set_initial_model_number = .true.
+	set_initial_cumulative_energy_error = .true.
+
+
+! define method to calculate initial model
+  	create_pre_main_sequence_model = .true.
+  	pre_ms_T_c = 4e5 ! initial center temperature (below 1d6)
+  	relax_mass_scale = .true.
+  	dlgm_per_step = 1d-3 ! log10(delta M/Msun/step)
+  	new_mass = 1.0d-2 ! 10 Mjupiter in Msun units
+  	change_mass_years_for_dt = 1
+
+
+
+/ !end of star_job namelist
+
+
+&controls
+
+  
+! set initial mass
+  	initial_mass = 0.04
+
+! Atmopheres controls
+
+
+ 	atm_option = 'table'
+    atm_table = 'tau_100'
+
+	mesh_delta_coeff = 0.5
+	max_dq = 5d-4
+	max_allowed_nz = 10000
+
+	! initial metalicity
+	initial_z = 0.014
+	x_ctrl(1) = 20			! deuterium abundance in ppm	
+	x_ctrl(2) = 85			! he3 abundance in ppm	
+	! radius control
+	x_ctrl(3) = 1.5		! final radius
+
+! mixing controls
+
+	set_min_D_mix = .true.
+	min_D_mix = 0d0
+	mixing_length_alpha = 1.8    
+
+! convective premixing
+	use_Ledoux_criterion = .true.
+	!do_conv_premix = .true.
+	steps_before_use_gold_tolerances = 10000
+	max_resid_jump_limit = 1d99
+
+/ ! end of controls namelist

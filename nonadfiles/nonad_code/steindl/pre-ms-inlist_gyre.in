@@ -1,0 +1,76 @@
+&constants
+/
+
+&model
+	model_type = 'EVOL'
+	file = 'LOGS/<<file_name>>' 
+	file_format = 'MESA'
+	repair_As = .true.
+/
+
+&mode
+	l = 1
+	n_pg_min = -50
+	n_pg_max = -1
+	tag = 'g'
+/
+
+&mode
+	l = 1
+	tag = 'p'
+	n_pg_min = 1
+	n_pg_max = 50
+/
+
+&osc
+    outer_bound = 'DZIEM'
+    inner_bound = 'REGULAR'
+	nonadiabatic = .TRUE.
+	conv_scheme = 'FROZEN_PESNELL_4'
+/
+
+&num
+    diff_scheme = 'COLLOC_GL2'
+/
+
+&scan
+	grid_type = 'INVERSE'
+	freq_min = 0.05
+	freq_max = 10
+
+	n_freq = 1000
+	freq_min_units = 'CYC_PER_DAY'
+    freq_max_units = 'CYC_PER_DAY'
+	tag_list = 'g'
+/
+
+&scan
+	grid_type = 'LINEAR'
+	freq_min = 2
+	freq_max = 100
+
+	n_freq = 1000
+	freq_min_units = 'CYC_PER_DAY'
+    freq_max_units = 'CYC_PER_DAY'
+	tag_list = 'p'
+/
+
+
+&grid
+    	alpha_osc = 20
+    	alpha_exp = 4
+    	n_inner = 10
+/
+
+&nad_output
+	summary_file = 'LOGS/<<file_name>>.summary.txt'
+	freq_units = 'CYC_PER_DAY'
+	summary_file_format = 'TXT'
+	mode_file_format = 'TXT'
+	summary_item_list = 'M_star,R_star,L_star,j,l,m,n_p,n_g,n_pg,omega,freq,E_norm,W,eta,'
+	mode_template = 'LOGS/<<file_name>>_l%L_n%N_j%J.txt'
+	!mode_item_list = 'M_star,R_star,L_star,l,m,n,n_p,n_g,n_pg,freq,xi_h,xi_r,x,dW_dx,Gamma_1,P,rho,T,dE_dx'
+/
+
+&ad_output
+/

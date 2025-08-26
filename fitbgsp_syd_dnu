@@ -1,0 +1,31 @@
+;;;; general parameters
+0.		; low frequency limit ;org=1.
+1000.		; upper frequency limit
+500		; number of Monte-Carlo iterations (set 1 for no uncertainties)
+''      	; name of file (in DnupipeV40/) containing frq range to be excluded for individual stars 3-col:[KICID fmin fmax]; one line per range 
+5.		; oversampling factor of input spectrum
+;;;; background fit
+2		; number of Harvey components in background fit
+0   	    	; try to force all Harvey components to be in the final fit? (0-no,1-yes)
+270.		; lower limit for noise estimate ;was 250 in V26
+280.		; upper limit for noise estimate ;was 260 in V26
+10		; smoothing width (# of frequency points)
+30  	    	; width for independent bins for smoothing/fitting ;was 10 in V26
+1		; fix white noise component in fit?
+0		; fix frequency intervals for components? forget about this
+0   		; times*numax is fmax for fit 1st harvey model (granulation) in 1st iteration; set to 0 if all components should be fit at once (org=2)
+;;;; deltanu determination
+0.01		; lower limit for lag ;org=0.1 ;was 0.5 in V26
+30.		; upper limit for lag ;org=50 ;was 25 in V26
+10.		; number of peaks for fitting AC ;org=10 ;was 5 in V26
+0.5		; smoothing of PS (muHz)
+;;;; misc parameters
+1		; enable plotting?
+0  	    	; check results step by step (0-no,1-yes)?
+1		; save screenshots?
+screenshots_new/	; 
+0		; fit using python bayes module? if so, then many of the above options are irrelevant
+0		; additionally add a gaussian bump in the bayesian fitting? only relevant if the bayes module is being used for the background fits (line above must be 1)
+1		; if 1, then .globalpars and .bgfitpars files will be replaced and overwritten; if 0, then .globalpars and .bgfitspars will be appended to, skipping any of the objects that are already present in .globalpars. assumes .findex, .globalpars, .bgfitspars, and .ranges are all in alignment when SYD is called --.globalpars cannot be one object ahead of .bgfitpars, for example.
+0		; if 1, just do a replot. this will means that .bgfitpars and .globalpars files are not overwritten, just the .sp.gif files are remade with expected values of things, etc., etc. MUST ALSO SET ABOVE OPTION TO 1 (replace). don't worry, it won't replace your files.
+0		; if 1, do a bayesian dnu calculation. if 0, do not do a dnu calculation		

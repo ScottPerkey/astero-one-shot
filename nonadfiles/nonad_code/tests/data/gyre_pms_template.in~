@@ -1,0 +1,92 @@
+&model
+	model_type = 'EVOL'  ! Obtain stellar structure from an evolutionary model
+	file = '{profile}.GYRE'
+	file_format = 'MESA' ! File format of the evolutionary model
+	! examples I have seen use 6.6742800000e-80 but I have it ending in 08 in SYDOSU.scaling_relation...so keeping it consistent....
+
+	! file = 'rgb.mesa'    ! File name of the evolutionary model
+	! file_format = 'MESA' ! File format of the evolutionary model
+/
+&rot
+
+/
+&constants
+        G_GRAVITY = 6.6740800000e-08
+	R_sun = 6.958e10  
+	M_sun = 1.988435e33
+/
+
+&mode
+	l = 0
+/
+
+&mode
+	l = 1
+/
+
+&mode
+	l = 2                     ! Harmonic degree
+/
+
+&osc
+        outer_bound = 'VACUUM' ! Use a zero-pressure outer mechanical boundary condition
+	nonadiabatic = .FALSE.
+/
+
+&num
+	diff_scheme = 'MAGNUS_GL4'
+        n_iter_max = 100
+/
+
+&scan
+	!        grid_type = 'INVERSE' ! Scan for modes using a uniform-in-period grid; best for g modes DEFAULT IS LINEAR
+        freq_min_units = 'NONE'
+        freq_max_units = 'NONE'
+        ! freq_min_units = 'UHZ'   
+        freq_min = 10       ! Minimum frequency to scan from
+	freq_max = 40        ! Maximum frequency to scan to
+	n_freq = 250         ! Number of frequency points in scan
+
+	! FOR GIANTS
+        ! freq_min = 0.5
+        ! freq_max = 10.0
+        ! n_freq = 50
+
+	
+/
+
+&shoot_grid ! Can be left empty
+/
+
+&recon_grid ! Can be left empty
+/
+
+&grid
+	!	alpha_osc = 10  ! Ensure at least 10 points per wavelength in propagation regions
+	!alpha_exp = 2   ! Ensure at least 2 points per scale length in evanescent regions
+	!		n_inner = 5  	   ! Ensure at least 5 points between center and inner turning point
+	! alpha_thm = 5
+	! alpha_str = 10
+/
+&ad_output
+	summary_file = '{profile}.gyre_nad.eigval.h5'
+	summary_file_format = 'HDF'                             ! Format of summary file
+        summary_item_list = 'M_star,R_star,l,n_pg,n_g,omega,freq,E_p,E_g,E,E_norm,Delta_p,Delta_g,freq_units,freq_frame' ! Items to appear in summary file
+
+        detail_template = 'mode-%J.h5'                      		  ! File-name prefix for mode files
+	detail_file_format = 'HDF'                   		    ! Format of mode files
+   ! detail_item_list = 'M_star,R_star,L_star,m,rho,n,l,n_p,n_g,omega,freq,E,E_norm,W,x,V,As,U,c_1,Gamma_1,nabla_ad,delta,xi_r,xi_h,phip,dphip_dx,delS,delL,delp,delrho,delT,dE_dx,dW_dx,T'
+   detail_item_list = 'M_star,R_star,L_star,m,rho,n,l,n_p,n_g,omega,freq,E,E_p,E_g,E_norm,x,nabla_ad,delta,xi_r,xi_h,prop_type'
+   freq_units = 'UHZ'
+/
+
+&nad_output
+	summary_file = '{profile}.gyre_nad.eigval.h5'
+	summary_file_format = 'HDF'                             ! Format of summary file
+        summary_item_list = 'M_star,R_star,l,n_pg,n_g,omega,freq,E_p,E_g,E,E_norm,Delta_p,Delta_g,freq_units,freq_frame' ! Items to appear in summary file
+        detail_template = 'mode-%J.h5'                      		  ! File-name prefix for mode files
+	detail_file_format = 'HDF'                   		    ! Format of mode files
+   ! mode_item_list = 'M_star,R_star,L_star,m,rho,p,n,l,n_p,n_g,omega,freq,E,E_norm,W,x,V,As,U,c_1,Gamma_1,nabla_ad,delta,xi_r,xi_h,phip,dphip_dx,delS,delL,delp,delrho,delT,dE_dx,dW_dx,T'
+   detail_item_list = 'M_star,R_star,L_star,m,rho,n,l,n_p,n_g,omega,freq,E,E_p,E_g,E_norm,x,nabla_ad,delta,xi_r,xi_h,prop_type'
+   freq_units = 'UHZ'
+/

@@ -1,0 +1,36 @@
+index.count:
+had to remove extra rows:
+24 1.4 -1.0d0 1.7
+25 1.4 -1.0d0 2.0
+26 1.4 -4.0d-1 1.7
+27 1.4 -4.0d-1 2.0
+28 1.4 -2.0d-1 1.7
+
+
+/white
+has a good version of tim's C-D grid. according to him:
+Hey Joel,
+I am so sorry for how long this has taken to get to you. Despite knowing where I had the files saved, those folders... I believe you have this concept in the US of a Superfund site? Something like that.
+I've got something like a dozen different versions of the tracks, and which ones are the best to use for different applications... some are completely useless, some have good small separations but epsilon goes to hell randomly... bit of a mess. Anyway, this tarball has contains good tracks for making a C-D diagram, with Z=0.011, 0.017, 0.028 - roughly [Fe/H] ~ -0.2, 0, +0.2, with masses between 0.7 and 2.0 M_sun in steps of 0.1 M_sun.
+
+
+
+
+
+3:39
+Binary
+the_CD_tracks.tgz
+367 kB Binary367 kB — Click to download
+
+
+3:43
+It's not the complete grid, though. That had a mass resolution of 0.01 M_sun, and metallicities between ~-0.9 and and +0.5. I'm sure I can piece together the [Fe/H]~0 grid with the full mass resolution - I had that to make the isochrones in my 2011 paper. I don't believe that exists at other metallicities. I do have another set of tracks that covers the whole metallicity range at 0.1 M_sun resolution, but those tracks have issues. A not insignificant number of the models in the grid have problems where there wasn't a sufficient number of mesh points at the right locations when calculating the frequencies to do so accurately. So they jump around a bit, and the tracks are not smooth. We - and I mean Dennis - fixed these for the tracks that went in the paper, but not for all of them, and the grid became a bit of a patchwork. (edited)
+3:44
+And there was a bit of data curation where bad models were manually excluded from tracks.
+
+Tim White  3:51 AM
+As for the grid itself, I'm afraid I don't have MESA inlists because it wasn't made with MESA. These are ASTEC models, with frequencies calculated using ADIPLS - Jørgen's codes. Dennis made the grid prior to Kepler launching. It is described here: https://ui.adsabs.harvard.edu/abs/2009ApJ...700.1589S/abstract in Section 4. It is also described in this paper as Model K: https://ui.adsabs.harvard.edu/abs/2010ApJ...723.1583M/abstract.
+
+Tim White  3:58 AM
+I hope this is useful!
+I'm thinking it might be worth the effort for me to calculate the tracks again for a new MESA grid - hopefully without the frequency issues the old one had - and make it easily accessible online. And/or make code available for computing the seismic parameters so people can do it for their own tracks/grids. Might even be quicker than trying to work out what the hell I was thinking 10 years ago.

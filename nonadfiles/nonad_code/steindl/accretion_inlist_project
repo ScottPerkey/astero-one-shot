@@ -1,0 +1,119 @@
+
+
+! For the sake of future readers of this file (yourself included),
+! ONLY include the controls you are actually using.  DO NOT include
+! all of the other controls that simply have their default values.
+
+&star_job
+
+
+  ! save a model at the end of the run
+  	load_saved_model = .true.
+  	saved_model_name = "../../initial_model/r1_5_mesh05_maxdq_20ppm_Op09_lowT_tau100_ml18_z0014"
+
+! change form lnd to lnPgas
+	change_lnPgas_flag = .true.
+	new_lnPgas_flag = .TRUE.
+
+! set opacity tables
+	kappa_file_prefix = 'OP_a09_nans_removed_by_hand'
+
+
+! set initial composition and nuclear reaction network
+  	initial_zfracs = 8 
+
+	change_net = .true.
+	new_net_name = 'pp_and_cno_extras.net' 
+	change_initial_net = .true.
+	set_initial_age = .true.
+	set_initial_model_number = .true.
+	set_initial_cumulative_energy_error = .true.
+
+
+    set_initial_dt = .true.
+	years_for_initial_dt = 0.01
+
+	
+/ !end of star_job namelist
+
+
+&controls
+
+! mesh controls
+	mesh_delta_coeff = 0.5
+	max_dq = 5d-4
+	max_allowed_nz = 10000
+	smooth_convective_bdy = .false.
+
+! composition controls
+	initial_z = 0.014
+	x_ctrl(1) = 20			! deuterium abundance in ppm	
+	x_ctrl(2) = 85			! he3 abundance in ppm	
+	x_ctrl(3) = 0.02		! mass step
+	x_ctrl(4) =  0.1		! first mass
+
+! mixing controls
+
+	set_min_D_mix = .true.
+	min_D_mix = 0d0
+	mixing_length_alpha = 1.8  
+	overshoot_scheme(1) = 'exponential'
+	overshoot_zone_type(1) = 'any'
+	overshoot_zone_loc(1) = 'any'
+	overshoot_bdy_loc(1) = 'top'
+
+	overshoot_f(1) = 0.01d0
+	overshoot_f0(1) = 0.005d0
+
+	overshoot_scheme(2) = 'exponential'
+	overshoot_zone_type(2) = 'any'
+	overshoot_zone_loc(2) = 'any'
+	overshoot_bdy_loc(2) = 'bottom'
+
+	overshoot_f(2) = 0.005d0
+	overshoot_f0(2) = 0.0025d0
+
+	prune_bad_cz_min_Hp_height = 0.1
+ 	prune_bad_cz_min_log_eps_nuc = 99
+
+	min_convective_gap = 0.1
+
+
+! stop after reaching main sequence
+	xa_central_lower_limit_species(1) = 'h1'
+
+! convective premixing
+	use_Ledoux_criterion = .true.
+	do_conv_premix = .true.
+
+! accretion controls
+	accrete_same_as_surface = .false.
+	accretion_zfracs = 8
+	x_ctrl(5) = 0.1 !control for linear change of energy
+
+	use_other_energy = .true.
+	mass_change = 5d-6
+
+! convergence_controls
+	
+	max_resid_jump_limit = 1d99
+	varcontrol_target = 8d-5
+
+
+	tiny_corr_coeff_limit = 5000
+	delta_lgL_limit = 0.001d0
+	delta_lgT_limit = 0.005d0
+	timestep_factor_for_retries = 0.9
+	timestep_factor_for_backups = 0.9
+	min_timestep_factor = 0.7
+	max_timestep_factor = 1.1
+	conv_vel_newton_itermin_until_reduce_min_corr_coeff = 3
+	conv_vel_corr_coeff_limit = 0.002d0
+	newton_itermin_until_reduce_min_corr_coeff = 0
+	corr_coeff_limit = 0.001d0
+
+! debugging_controls
+	photo_interval = 50
+
+
+/ ! end of controls namelist

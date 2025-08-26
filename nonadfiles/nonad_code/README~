@@ -1,0 +1,16 @@
+If you have MESA data in the current working directory, then you can compute th\
+e large freq. separation by doing:
+python -m nonad.plot_modes profile3.data --plot
+which will result in output like:
+profile3.data.astero.in
+which contains the large freq. separation (both the scaling relation version an\
+d the actual modelled version)
+as well as a plot called:
+profile3.data_freqs.png
+showing what those frequencies look like in comparison to the red giant branch \
+pattern.
+
+*w_damping.png
+made by setting use_eta and damping_thresh > -np.inf (used 0, but could be anything else)
+*w_vis.png
+made by turning off use_eta and by using damping_thresh > -np.inf (used 0, but could be anything else)

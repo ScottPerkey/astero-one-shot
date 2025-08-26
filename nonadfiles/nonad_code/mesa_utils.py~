@@ -1,0 +1,42 @@
+'''
+Utility functions for dealing with MESA.
+'''
+
+def get_profiles(phase='PMS', history_file='LOGS/history.data', debug=False)
+'''
+Inputs 
+[ phase : str ['PMS', 'MS'] ]
+ Select which profiles you want --- either those corresponding to the MS or PMS.
+Outputs
+profiles_out : list of str
+ the names of the profiles that correspond to PMS or MS.
+'''
+    # Read in the track
+    starg, starl = fileio.read_mesa(history_file)
+    # Select the main sequence: those are the models where some hydrogen is
+    burnt, but not all
+    if phase == 'MS':
+        burnt_hydrogen = starl['center_h1'] < (starl['center_h1'].max()-1e-2)
+        has_hydrogen = 0.03 < starl['center_h1']
+        starl = starl[ burnt_hydrogen & has_hydrogen ]
+    elif phase == 'PMS':
+        burnt_hydrogen = starl['center_h1'] < (starl['center_h1'].max()-1e-2)
+        starl = starl[ -burnt_hydrogen ]
+
+    Prepare an array to list the models which have excited modes
+    excited = np.zeros(len(starl))
+    if debug:
+        models = [starl['model_number'][-1]]
+    else:
+        models = starl['model_number']
+
+    profiles_out = []
+    for i, model_number in enumerate(models):
+
+        print(number.index(model_number))
+        try:
+            profiles_out.append(profiles[number.index(model_number)])
+        except:
+            print ('couldnt find a profile for model number {}'.format(model_number))
+            continue
+    return profiles_out

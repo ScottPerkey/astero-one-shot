@@ -1,0 +1,190 @@
+import numpy as np
+from scipy import stats
+from SYDOSU.dnu_util import dnu_e, lorentzians, lorentzians_full, lorentzians_full_ell
+#from pudb import set_trace as pause
+def get_model(mod, amps, numax, **kwds):
+    '''
+    given a set of f mod dnu and numax, will return a collapsed echelle diagram model
+    fwhm will be assumed to be numax*0.005
+    # JCZ 150817
+    amps can be anything -- is not used.
+    '''
+    # choose epsilon to be the location of the peak of 1.0
+    # uncomment if using dataframe mod
+    #epsilon = mod.loc[amps.argmax()]
+    epsilon = mod[amps.argmax()]
+    # DEBUG !!!
+    # just trying out this way to see what happens if i fix epsilon to be the expected one.
+    epsilon = 0.634 + 0.63*np.log10(np.max(mod))
+    # the way lorentzians works is that the first element of the _amps array
+    # is assumed to be epsilon. in the program, the amplitude of l=0 is fixed to 1.0
+
+    # _amps = np.array([epsilon, 0.5, 0.8])
+    # since radial location is now allowed to vary, the _amps needs to reflect this.
+    _amps = np.array([1.0, 0.5, 0.8])
+
+
+    fwhm = kwds.pop('fwhm', numax*0.005)
+    dnu = np.max(mod)
+
+    # JCZ 150817
+    # this had just been an array of zeros... which makes me wonder what was actually being fit...?
+    # xs = np.array([0.,0.,0.])
+    # JCZ 220917
+    # was 1:-1 instead of 0:-1 for the two lines below, but got an error from lorentzians because diff is assumed to have three things in it
+    deltanu = np.array([0.0, -0.025, 0.121, 0.282])[0:-1]
+    deltanu_const = np.array([0.0, 0.0, 0.047, 0.16])[0:-1]
+    xs = deltanu*dnu + deltanu_const
+    # JCZ 091117
+    xs += epsilon
+
+    return lorentzians(mod, xs, _amps, dnu, fwhm, fixed=True)
+
+
+def get_model_full(f, dnu, numax, ell, n, **kwds):
+    '''
+    given a set of frequencies, dnu, and number of orders, desired, an echelle diagram model will be generated
+    fwhm will be assumed to be numax*0.005
+    Inputs
+    f : ndarray
+     in muHz
+    dnu : float
+     in muHz
+    numax : float
+     in muHz -- will be the center of the echelle diagram, with the orders centered around either side.
+    n : int
+     how many orders are desired
+    ell : int
+     maximum mode considered, starting with 0
+    kwds : dict
+     possible keys include:
+     epsilon : float
+      location of the radial mode of the first order
+     fwhm : float
+      characteristic FWHM of the modes -- should be of order dnu. ratios of the widths of modes are assumed to be fixed (see dnu_utils.lorentzians())
+     rot : float
+      rotational splitting in muHz. Default 0.0. MUST BE >=0.0.
+     i : float
+      inclination angle assumed for the roational splitting signal. IN DEGREES. Default 60.
+     envelope_width : float
+      width of the Gaussian envelope applied to the modes. Default dnu*3. To not apply an envelope, set to np.inf.
+    Notes
+    fwhm assumed to be 0.005*numax, if not specified
+    amplitudes assumed to be 1, 0.5, 0.8 for 0, 1, 2 modes
+    epsilon assumed to be first element of f, if not specified
+    History
+    JCZ 150817
+
+    '''
+    
+    # fiducial values are given behind the comment, with rounding to the nearest muhz in order of 0, 1, 2
+    ell = ell
+    deltanu = np.array([0.0, -0.025, 0.121, 0.282])[0:ell]
+    deltanu_const = np.array([0.0, 0.0, 0.047, 0.16])[0:ell]
+    diffs =    deltanu*dnu + deltanu_const #np.array([5.0, 2.1, 4.1])#*0.2
+    # find the lowest frequency that corresponds to f mod dnu = zero, which is the reference point for epsilon.
+    # expected frequency for that to occur at is...
+    # don't want to actually start modeling the outermost orders, but find the lowest order symmetric around numax
+    f0 = f[np.argmin(np.abs(f - numax))]
+    # if not _params.collapsed:
+    f_zero = f0 - ((n//2 == 0) + n//2)*(dnu - (f0 % dnu ))
+    
+    # else:
+        # f_zero = f0
+
+    xs = np.zeros(shape=(n, ell))
+    amps = np.zeros(shape=(n,ell))
+    epsilon = kwds.pop('epsilon', 0.0)
+
+    for _n in np.arange(n):
+        amps[_n,:] =  np.array([1.0, 0.5, 0.8, 0.0])[0:ell] #np.array([1.0, 0.5, 0.8])#*0.5
+        # the zeroth amp is by definition 1 so it is used for epsilon, this is the expected from cosaro+2012
+
+        
+        diffs = xs[_n,:]*0.
+        if ell >= 1:
+            diffs[1] = -0.025*dnu
+        if ell >= 2:
+            diffs[2] = (0.121)*dnu + 0.047
+        xs[_n,1] = dnu/2. + xs[_n,0] - diffs[1]
+        xs[_n,2] = xs[_n,0] - diffs[2]
+
+
+        # xs are the absolute positions of the peaks, so need to go from diffs to positions
+        # xs[_n,1] = diffs[1] + xs[_n,0] - dnu/2.
+
+        # if xs[_n,2] < 0.:
+        #     xs[_n,1] = xs[_n,0] + dnu/2. - diffs[1]
+        # xs[_n,2] = xs[_n,0] - diffs[2]
+        # if xs[_n,2] < 0:
+        #     xs[_n,2] = xs[_n,0] + dnu - diffs[2]
+
+        xs[_n,:] = xs[_n,:] + dnu*_n
+    # if _params.collapsed:
+        # xs = xs % dnu
+
+    fixed = False
+    fixed_epsilon = True
+
+    if fixed:
+        amps[:,0] = 1.0
+        xs += f_zero
+    else:
+        amps[:,0] = 1.0
+        # amps[:,0] = [dnu*a for a in range(len(amps[:,0]))] + f_zero + epsilon
+        xs += f_zero + epsilon
+    
+
+    def envelope(f,loc,width):
+        return np.exp(-(f -loc)**2/(2.*width**2))
+    envelope_width = kwds.pop('envelope_width', dnu*3.)
+
+    fwhm = kwds.pop('fwhm', numax*0.005)
+    i = kwds.pop('i', 60.)
+    rot = kwds.pop('rot', 0.0)
+    # JCZ 160817
+    # to add rotational splitting, need to add the ells one at a time
+    result = f*0.0
+    from scipy.special import factorial, lpmn
+    for l in range(ell):
+        # print l
+        # print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+
+        for m in np.arange(-l, l+1, 1):
+            # print '****'
+            # print m
+            # print '****'
+            # reduction in amplitude of the l,m mode due to rotation from ballot+ 2008
+            ratio = float(factorial(l -np.abs(m), exact=True))/float(factorial(l+np.abs(m), exact=True))*(lpmn(np.abs(m),l,np.cos(i*np.pi/180.))[0][np.abs(m),l])**2
+            # print 'ratio is:'
+            ratio *=envelope(xs+m*rot, numax, envelope_width)
+            # print ratio
+            # print 3./8.*np.sin(i*np.pi/180.)**4
+            # print factorial(np.abs(l-m), exact=True)
+            # print factorial(np.abs(l+m), exact=True)
+            # print (lpmn(m,l,np.cos(i*np.pi/180.))[0][m,l])
+            # print ratio
+            # if np.abs(m) > 0:
+                # ratio = 1./np.abs(m)
+            # else:
+                # ratio = 1.0
+            # print 'amps are:'
+            # print amps
+            # print m*rot
+            # _amps = amps*ratio
+            # _amps[:,0] = 1.0
+            result += lorentzians_full_ell(f, xs+m*rot, amps*ratio, dnu, fwhm, l, fixed=False, epsilon=epsilon, fixed_epsilon=False, wrap=False)
+
+    return result
+    # return lorentzians_full(f, xs, amps, dnu, fwhm, fixed=fixed, epsilon=f_zero, fixed_epsilon=fixed_epsilon, wrap=False)
+
+def dnu_corr(mod, amps, numax, **kwds):
+    '''
+    given a collapsed echelle diagram and a numax, will
+    return a correlation coefficient assuming the standard
+    model for the collapsed echelle diagram
+    Notes
+    amps should be normalized to 1.0
+    '''
+    model = get_model(mod, amps, numax, **kwds)
+    return stats.pearsonr(amps, model)[0]

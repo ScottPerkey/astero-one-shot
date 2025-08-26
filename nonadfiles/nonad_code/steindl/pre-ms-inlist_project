@@ -1,0 +1,136 @@
+
+
+! For the sake of future readers of this file (yourself included),
+! ONLY include the controls you are actually using.  DO NOT include
+! all of the other controls that simply have their default values.
+
+&star_job
+
+
+  ! save a model at the end of the run
+  	load_saved_model = .true.
+
+
+  ! display on-screen plots
+    pgstar_flag = .true.
+
+
+! change form lnd to lnPgas
+	kappa_file_prefix = 'OP_a09_nans_removed_by_hand'
+
+
+	change_net = .true.
+	new_net_name = 'pp_and_cno_extras.net' 
+	change_initial_net = .true.
+
+	set_initial_model_number = .true.
+	set_initial_cumulative_energy_error = .true.
+
+	set_initial_dt = .true.
+
+/ !end of star_job namelist
+
+
+&controls
+	initial_mass = <<initial_mass>>
+
+
+! GYRE controls. We have a run_star_extras structure to can run GYRE directly in MESA.
+! However, the results in the publication are with GYRE ran after MESA run ist completed,
+! such that we have the influence of the added atmosphere. Hence, the interval is chosen at a 
+! number such that GYRE will never be called.
+  
+   	x_integer_ctrl(1) = 100000 ! output GYRE info at this step interval
+   	x_logical_ctrl(1) = .false. ! save GYRE info whenever save profile
+
+   	x_integer_ctrl(2) = 200 ! max number of modes to output per call
+   	x_logical_ctrl(2) = .true. ! output eigenfunction files
+
+   	x_integer_ctrl(3) = 1 ! mode l (e.g. 0 for p modes, 1 for g modes)
+   	! should match gyre.in mode l
+   	x_integer_ctrl(4) = -19 ! order
+   	x_ctrl(4) = 0.7d-5 ! freq ~ this (Hz)
+   	x_ctrl(5) = 0.23d5 ! growth < this (days)
+
+
+! Atmopheres controls
+ 	atm_option = 'T_tau'
+    atm_T_tau_relation = 'Eddington'
+    atm_T_tau_opacity = 'varying'
+	atm_T_tau_errtol = 1d-9
+
+! mesh controls
+	mesh_delta_coeff = 0.5
+	max_dq = 5d-4
+	max_allowed_nz = 10000
+	smooth_convective_bdy = .false.
+
+
+! composition controls
+	initial_z = 0.014
+	x_ctrl(1) = 20			! deuterium abundance in ppm	
+	x_ctrl(2) = 85			! he3 abundance in ppm	
+	x_ctrl(3) = 0.5			! mass of model to load
+
+! mixing controls
+
+	set_min_D_mix = .true.
+	min_D_mix = 0d0
+	mixing_length_alpha = 1.8 !1.8   
+	overshoot_scheme(1) = 'exponential'
+	overshoot_zone_type(1) = 'any'
+	overshoot_zone_loc(1) = 'any'
+	overshoot_bdy_loc(1) = 'top'
+
+	overshoot_f(1) = 0.01d0
+	overshoot_f0(1) = 0.005d0
+
+	overshoot_scheme(2) = 'exponential'
+	overshoot_zone_type(2) = 'any'
+	overshoot_zone_loc(2) = 'any'
+	overshoot_bdy_loc(2) = 'bottom'
+
+	overshoot_f(2) = 0.005d0
+	overshoot_f0(2) = 0.0025d0
+
+	tiny_corr_coeff_limit = 5000
+
+! stop after reaching main sequence
+	xa_central_lower_limit_species(1) = 'h1'
+
+! Asteroseismology controls
+    	num_cells_for_smooth_gradL_composition_term = 0    
+    	calculate_Brunt_N2 = .true.
+    	pulse_data_format = 'GYRE'
+    	write_pulse_data_with_profile = .true.
+    	add_atmosphere_to_pulse_data = .true.
+    	add_center_point_to_pulse_data = .true.
+    	keep_surface_point_for_pulse_data = .true.
+    	add_double_points_to_pulse_data = .true.
+    	interpolate_rho_for_pulse_data = .true.
+    	threshold_grad_mu_for_double_point = 5d0
+
+! convective premixing
+	use_Ledoux_criterion = .true.
+	do_conv_premix = .true.
+
+! accretion controls
+	accrete_same_as_surface = .false.
+	accretion_zfracs = 8
+
+	x_ctrl(6) = 0.1 !control for linear change of energy
+	use_other_energy = .true.
+  	use_other_adjust_mdot = .true.
+	mass_change = 5d-6	
+
+! convergence_controls
+	max_resid_jump_limit = 1d99
+	scale_max_correction = 0.1
+	varcontrol_target = 3d-5
+
+	newton_itermin_until_reduce_min_corr_coeff = 0
+	corr_coeff_limit = 0.001d0
+
+
+
+/ ! end of controls namelist
