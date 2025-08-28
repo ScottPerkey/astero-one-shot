@@ -117,7 +117,8 @@ class full_create:
 		#only reals when dealing with nonad 
 		a_csv = amp_total*ampnm
 		profile_name= ID
-		total_parent_dir="/home/032272043/projects/dnuGridCode/temp_move/test_runs"
+		total_parent_dir='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs'
+		#turn this into self.total_par_dir so we do not have to redefine it each time
 
 
 		if os.path.exists(total_parent_dir):
@@ -226,7 +227,7 @@ class full_create:
 
 	def create_BAM_data(self):
 		# all of this needs to be read after we do 
-		original_oldlist_datapath='/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
+		original_oldlist_datapath='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
 		
 		integers=[]
 		pattern=re.compile(r'profile(\d+)\.data\.GYRE')
@@ -236,15 +237,15 @@ class full_create:
 		                integer=int(match.group(1))
 		                integers.append(integer)
 		
-		command1='mkdir -p /home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs'
-		new_direc='/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs'
+		command1='mkdir -p /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs'
+		new_direc='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs'
 		
 		result1=subprocess.run(command1,shell=True,capture_output=True,text=True)
 		# we now need to get the csv from the individual profiles for further plotting 
 		os.chdir(new_direc)
 		
 		for i in integers :
-		        command3=f'cp /home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/profile{i}.data.GYRE/profile{i}freq_amp.csv  /home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs  '
+		        command3=f'cp /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/profile{i}.data.GYRE/profile{i}freq_amp.csv  /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs  '
 		
 		        result3=subprocess.run(command3,shell=True)
 		#now we have all of the csv's in the right place, now
@@ -255,7 +256,7 @@ class full_create:
                 		os.rename(filename,new_filename)
 
 		# Define the directory containing the text files
-		directory = '/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs/'
+		directory = '/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs/'
 		# Get a list of all .txt files in the directory
 		txt_files = glob.glob(os.path.join(directory, '*.txt'))
 
@@ -281,7 +282,7 @@ class full_create:
 		#USE SELF IN THIS HOE
 		#REMEBER THE HIPASS RUNPREPROCESS SETTINGS THOSE ARE EXTREMELY IMPORTANT IN THIS HOE
 
-		#command_copy_preprocess=f'cp $BAMHOME/run_this_w_preprocess /home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs' 
+		#command_copy_preprocess=f'cp $BAMHOME/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs' 
 		#subprocess.run(command_copy_preprocess,shell=True)
 		
 		# read in all txt files
@@ -302,9 +303,9 @@ class full_create:
 
 
 	def create_bam_csv(self):
-		
-		directory_main_path='/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
-		directory_get_txt='/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs'
+		#change these 
+		directory_main_path='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
+		directory_get_txt='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs'
 		# create the csv once, just with the headers (column names)
 		if not os.path.exists('1M0Z_BAM.csv'):
 			pd.DataFrame(columns=['ID','dnu_BAM','dnu_unc_BAM']).to_csv('1M0Z_BAM.csv',index=False)
@@ -316,6 +317,7 @@ class full_create:
 			match=pattern.match(item)
 			if match:
 				integers.append(int(match.group(1)))
+		print(integers)
 		# I feel like we can just do this 
 		# f'profile{k}_list_run.globalpars'
 		# the global pars has the numac and the dnu
@@ -330,14 +332,10 @@ class full_create:
 #This will create a file called FILE.bgcorr.dnu, which, at time of writing, has two duplicate rows, which have the dnu in the first column and the uncertainty on dnu in the second.
 		# first we need a NUMAX which is in global pars
 
-
 		return
 #		for j in integers:
 #		        command5=f'$BAMHOME/fitdnu.sh profile{j}freq_amp.txt.clean.hipass.fill.psd.bgcorr fitbgsp_syd_dnu  {NUMAX}'
 #		        result5=subprocess.run(command5,shell=True)
-			
-
-
 
 		for k in integers:
 			try: 
@@ -346,8 +344,7 @@ class full_create:
 				dnu_bam=df['dnu'].iloc[-1]
 				dnu_unc_bam=df['dnu_uncertainty'].iloc[-1]
 
-				pd.DataFrame([[f'profile{k}',dnu_bam_dnu_unc_bam]],
-						coluns=['ID','dnu_BAM','dnu_unc_BAM'])\
+				pd.DataFrame([[f'profile{k}',dnu_bam_dnu_unc_bam]],coluns=['ID','dnu_BAM','dnu_unc_BAM'])\
 					.to_csv('1M0Z_BAM.csv',mode='a',header=False,index=False)					
 				#old
 				#df_main=pd.DataFrame([[f'profile{k}',dnu_bam,dnu_unc_bam]],columns=[f'profile{k}','dnuBam','dnuUnc'])
@@ -395,11 +392,15 @@ class full_create:
 	# do the same thing but with asf grid 
 
 exp_test=full_create()
-#exp_test.make_oldlit_csv()
+exp_test.make_oldlit_csv()
 # we can do pysyd right here
 # whatever=whatever the class is called then call from here
-#exp_test.create_BAM_data()
+exp_test.create_BAM_data()
+
 exp_test.create_bam_csv()
+#check if the csv is correct and is in same format as all other -- 8.27.2025
+#not working currently 8.27.202
+
 #in order for the asf grid:
 # asf_create_txttorun.py
 # asf_run_txt.py

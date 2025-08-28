@@ -30,7 +30,7 @@ class pySYD_oneshot:
 
 	def power_spec_filename_correction(self):
 		#we need to do this other wise pySYD cannot read the values in the file correctly
-		base_directory='/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
+		base_directory='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
 		for dir_name in os.listdir(base_directory):
 			dir_path = os.path.join(base_directory, dir_name)
 			#make sure that the directory even exists
@@ -77,7 +77,7 @@ class pySYD_oneshot:
 			ax.set_xlim([params['extent'][0], params['extent'][1]])
 			ax.set_ylim([params['extent'][2], params['extent'][3]])
 			#probably change this later sorta
-			plt.savefig(f'/home/032272043/projects/dnuGridCode/temp_move/ed_pysyd_oneshot/ed_{name}.png', dpi=300)
+			plt.savefig(f'/home/032272043/projects/dnuGridCode/astero-one-shot/ed_pysyd_oneshot/ed_{name}.png', dpi=300)
 		except Exception as e:
 			print(f"profile{name} cant ED : {e} for who cares cause frequency and echelle diagram done messed up I guess")
                         #plt.clf()       
@@ -85,8 +85,8 @@ class pySYD_oneshot:
 
 
 	def full_pysyd(self):
-		os.mkdir('/home/032272043/projects/dnuGridCode/temp_move/ed_pysyd_oneshot')
-		directory_path ='/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
+		os.mkdir('/home/032272043/projects/dnuGridCode/astero-one-shot/ed_pysyd_oneshot')
+		directory_path ='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
 		file_list=os.listdir(directory_path)
 		filtered_files=[file for file in file_list if file.endswith('.data.GYRE')]
 		numbers = [int(re.search(r'\d+', file).group()) for file in filtered_files]
@@ -113,10 +113,10 @@ class pySYD_oneshot:
 
 				star=Target(name, params)
                         	# temporary below just do 113 cause we know what its finna gonna look like lowkey
-				star.params['inpdir']=f'/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/profile{name}.data.GYRE/'
-				star.params['outdir']='/home/032272043/projects/dnuGridCode/temp_move'
+				star.params['inpdir']=f'/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/profile{name}.data.GYRE/'
+				star.params['outdir']='/home/032272043/projects/dnuGridCode/astero-one-shot'
                         	# temporary below just do 113 cause we know what its finna gonna look like lowkey
-				file_path=f'/home/032272043/projects/dnuGridCode/temp_move/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/profile{name}.data.GYRE/{name}_PS.txt'
+				file_path=f'/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/profile{name}.data.GYRE/{name}_PS.txt'
 				col1_for_max_col2=self.process_txt_file(file_path)
 				star.params['obs_numax']=col1_for_max_col2
 				star.params['exp_dnu']=utils.delta_nu(star.params['obs_numax'])
