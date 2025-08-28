@@ -392,7 +392,7 @@ class full_create:
 	# do the same thing but with asf grid 
 
 exp_test=full_create()
-exp_test.make_oldlit_csv()
+#exp_test.make_oldlit_csv()
 # we can do pysyd right here
 # whatever=whatever the class is called then call from here
 exp_test.create_BAM_data()
@@ -413,9 +413,6 @@ exp_test.create_bam_csv()
 # make_oldlist needs to happen first
 
 
-# WHEN DO WE DO PYSYD?
-
-
-
 # MAYBE MAIN OUR OWN INTEGER GET METHOD? ACTUALLY PROBABLY JUST DO IT IN INIT
 # cause we can just have the integer whole class wide so that it can be upgraded either way
+# the preprocessw is required at all times
