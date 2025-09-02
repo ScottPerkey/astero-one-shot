@@ -275,15 +275,16 @@ class full_create:
 		        file.write(modified_content)
 		
 		print("All txt files have replaced ',' with ' '")
-		# we need to but run_this_w_preprocess in our working directory
+		# we need to but run_this_w_preprocess in our working directory !!!!!!!!!!
+	
 		
 
-		#MAKE THE DEFINITION OF THE REPLACING COMMAS WITH SPACED THAT IS REQUIRED IN THIS HOE
-		#USE SELF IN THIS HOE
-		#REMEBER THE HIPASS RUNPREPROCESS SETTINGS THOSE ARE EXTREMELY IMPORTANT IN THIS HOE
-
-		#command_copy_preprocess=f'cp $BAMHOME/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs' 
-		#subprocess.run(command_copy_preprocess,shell=True)
+		#MAKE THE DEFINITION OF THE REPLACING COMMAS WITH SPACED THAT IS REQUIRED
+		#REMEBER THE HIPASS RUNPREPROCESS SETTINGS THOSE ARE EXTREMELY IMPORTANT 
+		# this is completely required
+		# again we can do this before we change directory but it doesnt really matter
+		command_copy_preprocess=f'cp $BAMHOME/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs' 
+		subprocess.run(command_copy_preprocess,shell=True)
 		
 		# read in all txt files
 		# replace instances of ',' with ' '
@@ -296,8 +297,11 @@ class full_create:
 		        command4=f'ls profile{k}freq_amp.txt > profile{k}_list_run'
 		        result4=subprocess.run(command4,shell=True)
 		#we need to reset the working directory
+		# remember to always run: $BAMHOME/make_new_project.sh ./ and then source activate BAM
+		# EXTREMELY IMPORTANT WILL NOT RUN WITHOUT CORRECT PARAMETER FILES
 		for j in integers:
 		        command5=f'$BAMHOME/preprocess.sh run_this_w_preprocess profile{j}_list_run'
+		        #command5=f'/home/032272043/projects/dnuGridCode/astero-one-shot/preprocess.sh /home/032272043/projects/dnuGridCode/astero-one-shot/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs/profile{j}_list_run'
 		        result5=subprocess.run(command5,shell=True)
 			
 
@@ -396,8 +400,8 @@ exp_test=full_create()
 # we can do pysyd right here
 # whatever=whatever the class is called then call from here
 exp_test.create_BAM_data()
-
 exp_test.create_bam_csv()
+
 #check if the csv is correct and is in same format as all other -- 8.27.2025
 #not working currently 8.27.202
 

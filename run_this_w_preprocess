@@ -1,0 +1,177 @@
+#!/bin/bash
+set -e
+################################################################
+# 0 is off
+# 1 is on
+################################################################
+
+################################################################
+# DEBUGGING TOGGLES
+################################################################
+# number of LCs to process out of the input list. set to large number to 
+# operate on them all and effectively turn debugging off
+N=50000
+
+################################################################
+# PREPROCESS TOGGLES
+################################################################
+# go from .fits to .txt
+LFITS2TXT=1
+# remove NaNs and infs from the light curve
+LCLEAN=1
+# gap fill the light curve for gaps of three or fewer points
+LFILL=0
+# rebin the light curve
+LREBIN=0
+# high-pass filter the light curve
+LHIPASS=1
+# inpaing the light curve with a default dt of 1 min
+LINPAINT=1
+# convert flux to relative flux, if applicable (if fits2txtmode=VJ, LF2REL MUST BE 0)
+# if doing MULTIQUART, LF2REL MUST BE 0
+LF2REL=1
+# whether or not to pre-whiten
+LPW=0
+# whether or not to add an error
+LERR=0
+# convert light curve to power spectrum
+LLC2PSD=1
+# remove K2 thruster firing frequency noise from the power spectrum
+LEXCISE=0
+# make plots of the power spectra and time series that are to be run, to go in the bayes screenshots directory
+LPLOT=0
+
+################################################################
+# SET LRUN=1 TO RUN SYDOSU
+################################################################
+# run SYDOSU on the resulting light curves/power spectra
+LRUN=1
+################################################################
+# SET LADDON=1 TO PERFORM POST-PROCESSING AFTER RUNNING SYDOSU
+################################################################
+# post-processing after running SYDOSU to choose oscillators -- results are stored in seren.tab
+LADDON=0
+
+################################################################
+# LERR params
+################################################################
+# error in ppm of each time series point
+error=10
+
+################################################################
+# LC2PSD params
+################################################################
+# what kind of fits file is the data? (MAST ALTMAST SAVITA K2 KEPLER MULTIQUART are valid options)
+fits2txtmode=EVEREST
+lc='' # set to '' to use the natural nyq. freq. otherwise force it to be that of a 30min cadence sampling if set to be lc=',lc=1'
+# JCZ 130317
+# if divide=0, turn divide off when dealing with MULTIQUART and instead subtract means of each 
+# quarter instead of dividing... if divide=1, then divide by the means of each quarter.
+divide=1
+
+################################################################
+# EXCISE PARAMETERS
+################################################################
+# must be complete path to the peaks file if it is not in $dir
+peaks_list=${BAMHOME}'peaks_48.txt'
+# use the background model from a previous SYDOSU run to fill in the thruster noise
+# if there is not one available, will just ignore and fill in using the observed
+# frequencies surrounding the thruster frequencies
+bg_model=0
+
+################################################################
+# HIPASS PARAMETERS
+################################################################
+# JCZ 130317
+# changed width to 20 from 2 to accomodate long time scale behavior
+# half-width of high-pass filter in days
+# make the width negative to make the full-width of the high-pass filter to be
+# (max(time) - min(time))/abs(width)
+# so a width of -2.0 would make the high-pass full-width be twice the lowest frequency
+# of the power spectrum 
+width=2
+# sigma-clipping threshold
+thresh=4.0
+
+################################################################
+# F2RES PARAMETERS
+################################################################
+# what kind of flux is the original file to be converted to relative flux? (only ppm or flux are supported as of 4 dec 15).
+old='ppm'
+
+
+################################################################
+# PW PARAMETERS
+################################################################
+# how many frequencies to pre-whiten
+N_pw=2
+
+################################################################
+# REBIN PARAMETERS
+################################################################
+# full width of bins in days
+bin_width=0.5
+
+################################################################
+# ADDON PARAMS
+################################################################
+# if ADDON == 1, then you must supply a Python parameter file describing how the post-processing should proceed. omit the '.py' ending
+python_param_file=postprocessing_pypar
+
+################################################################
+# SYD preferences
+################################################################
+# parameter files for findex.pro and fitbgsp.pro -- must be located in the SYD directory.
+findex_param_file=findex_params_test
+# fitbgsp_param_file=fitbgsp_params_bayes
+# fitbgsp_param_file=fitbgsp_long.paras
+# fitbgsp_param_file=fitbgsp_params_bayes_no_replace
+fitbgsp_param_file=fitbgsp_params_test
+
+################################################################
+# PLOTTING PREFERENCES
+################################################################
+
+LNUMAXVAMP=0
+numaxvamp_output_name=vj_nu_max_v_amp.eps
+export numaxvamp_output_name
+numaxvdnu_output_name=vj_nu_max_v_dnu.eps
+export numaxvdnu_output_name
+plot_dir=${output_dir}/plots
+
+################################################################
+# DO NOT CHANGE THESE TOGGLES UNLESS YOU KNOW WHAT YOU'RE DOING
+################################################################
+psd_list='list_psd'
+excise_list='list_excise'
+clean_list='list_clean'
+fill_list='list_fill'
+hipass_list='list_hipass'
+f2rel_list='list_rel'
+list_rebin='list_rebin'
+
+# do findex as part of SYD
+findex=1
+# do fitbgsp
+fitbgsp=1
+# where the final power spectra, screenshots, parameters, etc., will go. note that while the code is running, the input directory will be the interim holding area. So if there is an error during runtime, these files will remain afterward. !!! ADD An EXIT CONDITION TO MAKE THIS OPTIONALLY NOT THE CASE
+output_dir=""
+# there are some files of lists (e.g., list_fill, list_hipass) that may be left over in the input directory, <dir>. If remove_from_input == 1, then these files will be removed from the inpt directory and placed in the output directory. 
+remove_from_input=1
+# whether or not the files are FITS files.
+fits=0
+LRESETMOVE=0
+LRESETCLEANUP=0
+LMAKE=0
+# whether or not to make a file called list_fits in <dir> (defined below) with all the FITS files names in it. (required for python modules to get RA/DEC and channel info)
+MAKEFITSLIST=0
+# whether or not to calculate an ACF correlation coefficient file which would be used by python modules. must specify in python_params.py if you would like to cut using this correlation coefficient
+LACF=0
+# extension for wildcard matching to choose the first files to work on (e.g., .txt files to clean if that is your first step as defined above, or .psd files if you just want to start with excising, etc
+first_ext='*fits'
+# how many peaks in ACF to use for calculating correlation coefficient
+nn=2
+# expected width of the peaks
+acf_width=0.1
+
+echo "DONE"

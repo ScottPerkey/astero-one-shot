@@ -1,2 +1,8 @@
 asfgrid_code/
 test_runs/
+bayes_harvey_pypar.py
+findex_params_test
+fitbgsp_params_test
+postprocessing_pypar.py
+preprocess.sh
+
