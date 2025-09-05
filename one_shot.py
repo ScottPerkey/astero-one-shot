@@ -25,7 +25,7 @@ from nonadfiles.nonad_code.dnu_util import lorentzian
 
 class full_create:
 	def __init__(self,**kwargs):
-		self.wowee=5
+		self.bse_numax=[]
 #		"""docu string meme
 #		Parameters
 #
@@ -226,6 +226,7 @@ class full_create:
 			#print(bad_files)
 
 	def create_BAM_data(self):
+		yes=pd.DataFrame()
 		# all of this needs to be read after we do 
 		original_oldlist_datapath='/home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha'
 		
@@ -283,8 +284,9 @@ class full_create:
 		#REMEBER THE HIPASS RUNPREPROCESS SETTINGS THOSE ARE EXTREMELY IMPORTANT 
 		# this is completely required
 		# again we can do this before we change directory but it doesnt really matter
-		command_copy_preprocess=f'cp $BAMHOME/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs' 
-		subprocess.run(command_copy_preprocess,shell=True)
+		# only do this once
+		#command_copy_preprocess=f'cp $BAMHOME/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs' 
+		#subprocess.run(command_copy_preprocess,shell=True)
 		
 		# read in all txt files
 		# replace instances of ',' with ' '
@@ -299,10 +301,27 @@ class full_create:
 		#we need to reset the working directory
 		# remember to always run: $BAMHOME/make_new_project.sh ./ and then source activate BAM
 		# EXTREMELY IMPORTANT WILL NOT RUN WITHOUT CORRECT PARAMETER FILES
-		for j in integers:
-		        command5=f'$BAMHOME/preprocess.sh run_this_w_preprocess profile{j}_list_run'
-		        #command5=f'/home/032272043/projects/dnuGridCode/astero-one-shot/preprocess.sh /home/032272043/projects/dnuGridCode/astero-one-shot/run_this_w_preprocess /home/032272043/projects/dnuGridCode/astero-one-shot/test_runs/nonad_1.0msun_0.0d0feh_mass_loss_1.7alpha/list_of_bam_runs/profile{j}_list_run'
-		        result5=subprocess.run(command5,shell=True)
+
+
+
+		# FORGET ALL THIS JUST DO ALL OF THE DNU ONLY USING .TXT AS THE BGCORR REPLACEMENT
+		# NEED BELOW 
+
+		# $BAMHOME/fitdnu.sh FILE.bgcorr fitbgsp_syd_dnu NUMAX
+		# lets get the nu max from the max of the profile{j}freq_amp.txt ( the frequency assosciated with the highest amplitude )
+		# so lets do that: 
+
+		
+		for f in integers:
+			find_nmax=pd.read_csv(f'profile{f}freq_amp.txt',sep=' ')		
+			amp_list=list(find_nmax.iloc[:,1])
+			max_index=amp_list.index(max(amp_list))
+			self.bse_numax.append(find_nmax.iloc[max_index,0])
+		
+		for idex,j in enumerate(integers):
+			print(idex)
+			command5=f'$BAMHOME/fitdnu.sh profile{j}freq_amp.txt fitbgsp_syd_dnu {self.bse_numax[idex]}'
+			result5=subprocess.run(command5,shell=True)
 			
 
 
@@ -400,7 +419,7 @@ exp_test=full_create()
 # we can do pysyd right here
 # whatever=whatever the class is called then call from here
 exp_test.create_BAM_data()
-exp_test.create_bam_csv()
+#exp_test.create_bam_csv()
 
 #check if the csv is correct and is in same format as all other -- 8.27.2025
 #not working currently 8.27.202

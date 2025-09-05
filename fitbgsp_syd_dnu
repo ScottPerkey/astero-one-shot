@@ -1,6 +1,6 @@
 ;;;; general parameters
-0.		; low frequency limit ;org=1.
-1000.		; upper frequency limit
+3.		; low frequency limit ;org=1.
+283.		; upper frequency limit
 500		; number of Monte-Carlo iterations (set 1 for no uncertainties)
 ''      	; name of file (in DnupipeV40/) containing frq range to be excluded for individual stars 3-col:[KICID fmin fmax]; one line per range 
 5.		; oversampling factor of input spectrum
@@ -15,7 +15,7 @@
 0		; fix frequency intervals for components? forget about this
 0   		; times*numax is fmax for fit 1st harvey model (granulation) in 1st iteration; set to 0 if all components should be fit at once (org=2)
 ;;;; deltanu determination
-0.01		; lower limit for lag ;org=0.1 ;was 0.5 in V26
+0.1		; lower limit for lag ;org=0.1 ;was 0.5 in V26
 30.		; upper limit for lag ;org=50 ;was 25 in V26
 10.		; number of peaks for fitting AC ;org=10 ;was 5 in V26
 0.5		; smoothing of PS (muHz)
