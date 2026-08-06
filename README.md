@@ -81,12 +81,17 @@ upstream projects:
 | --- | --- | --- |
 | pySYD | Automated measurements of global asteroseismic parameters and echelle diagnostics. | [GitHub repository](https://github.com/ashleychontos/pySYD), [documentation](https://pysyd.readthedocs.io/en/latest/index.html), [paper](https://arxiv.org/abs/2108.00582), [Zenodo release](https://zenodo.org/records/5140574) |
 | GYRE | Stellar oscillation calculations used by upstream model workflows. | [GitHub repository](https://github.com/rhdtownsend/gyre), [documentation](https://gyre.readthedocs.io/en/latest/), [paper](https://arxiv.org/abs/1309.4455) |
-| ASFGrid | Additional asteroseismic correction calculations, accessed from the local `asfgrid_code/asfgrid_v0.0.6/` directory. | The exact upstream ASFGrid repository or release URL is not included in the available project provenance; verify the source and cite its associated publication before redistribution. |
+| ASFGrid v0.0.6 | Additional asteroseismic correction calculations, accessed from the local `asfgrid_code/asfgrid_v0.0.6/` directory. | [Sharma et al. (2016)](https://doi.org/10.3847/0004-637X/822/1/15), [Stello & Sharma (2022)](https://doi.org/10.3847/2515-5172/ac8b12) |
 | BAM | Independent `f_Delta_nu` measurements through an external executable such as `fitdnu.sh`. | The exact astrophysical BAM repository or release used for this project must be supplied by the BAM installation source; unrelated projects with the same acronym should not be cited. |
 
 The citations above identify upstream software and publications; they do not
 claim that those projects are part of this repository. This project’s scripts
 should be cited separately when used in research.
+
+ASFGrid’s supplied documentation requests both Sharma et al. (2016) and
+Stello & Sharma (2022) be cited when ASFGrid v0.0.6 is used. ASFGrid is
+distributed under the GNU Affero General Public License (AGPL); consult the
+upstream distribution for its complete license terms.
 
 ## Tutorial
 
