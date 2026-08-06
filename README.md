@@ -71,6 +71,23 @@ python3 -m venv .venv_asfgrid
 BAM requires an external executable such as `fitdnu.sh`. Pass its path to the
 workflow or configure `BAMHOME` according to the BAM installation.
 
+## Upstream Tools and Citations
+
+This repository contains orchestration and plotting code around several
+external tools. Install, cite, and license those tools according to their
+upstream projects:
+
+| Tool | Use in this project | Upstream resources |
+| --- | --- | --- |
+| pySYD | Automated measurements of global asteroseismic parameters and echelle diagnostics. | [GitHub repository](https://github.com/ashleychontos/pySYD), [documentation](https://pysyd.readthedocs.io/en/latest/index.html), [paper](https://arxiv.org/abs/2108.00582), [Zenodo release](https://zenodo.org/records/5140574) |
+| GYRE | Stellar oscillation calculations used by upstream model workflows. | [GitHub repository](https://github.com/rhdtownsend/gyre), [documentation](https://gyre.readthedocs.io/en/latest/), [paper](https://arxiv.org/abs/1309.4455) |
+| ASFGrid | Additional asteroseismic correction calculations, accessed from the local `asfgrid_code/asfgrid_v0.0.6/` directory. | The exact upstream ASFGrid repository or release URL is not included in the available project provenance; verify the source and cite its associated publication before redistribution. |
+| BAM | Independent `f_Delta_nu` measurements through an external executable such as `fitdnu.sh`. | The exact astrophysical BAM repository or release used for this project must be supplied by the BAM installation source; unrelated projects with the same acronym should not be cited. |
+
+The citations above identify upstream software and publications; they do not
+claim that those projects are part of this repository. This project’s scripts
+should be cited separately when used in research.
+
 ## Tutorial
 
 All commands should be run from the repository root after the required local
