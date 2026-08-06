@@ -1,0 +1,9 @@
+numpy
+pandas
+scipy
+matplotlib
+astropy
+pyarrow
+
+# Optional ASFGrid support. ASFGrid itself is external and is not vendored.
+# ebfpy
