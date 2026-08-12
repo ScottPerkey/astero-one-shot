@@ -113,6 +113,7 @@ CITATION.cff
 *.aux
 *.bbl
 *.bcf
+*.blg
 *.fdb_latexmk
 *.fls
 *.lof

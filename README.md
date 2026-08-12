@@ -7,8 +7,9 @@ pipeline outputs, external executables, figures, thesis material, and local
 research notes are intentionally excluded.
 
 The code compares pySYD, BAM, ASFGrid, Li reference calculations, and
-Gaia/APOKASC-based radius benchmarks. The original `1M0_0D01.7ALPHA` sequence
-is treated as the nonadiabatic sequence; the Li grid is a separate reference
+Gaia/APOKASC-based radius benchmarks. The `1M0_0D01.7ALPHA` sequence is the
+nonadiabatic reference sequence; its model correction uses the conventional
+Gaussian-weighted model-frequency method. The Li grid is a separate reference
 calculation and is not labelled nonadiabatic.
 
 ## Source Files
@@ -176,8 +177,8 @@ git diff --check
 git status --short
 ```
 
-Generated data, figures, thesis material, and research notes should remain
-outside the public commit.
+Generated data, figures, thesis material, and research notes are ignored by
+the public code-only release and should remain outside the public commit.
 
 ## License
 

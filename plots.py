@@ -404,7 +404,7 @@ class all_plots:
 		fig,ax=plt.subplots(figsize=PLOT_FIGSIZE,dpi=PLOT_DPI)
 		ax.plot(data['radius'],data['value'],color=PLOT_COLORS['model'],linewidth=1.3,alpha=0.75,label='model sequence')
 		ax.scatter(data['radius'],data['value'],color=PLOT_COLORS['model'],alpha=0.68,s=20,edgecolors='white',linewidths=0.35)
-		_style_radius_plot(ax,title='Original nonadiabatic model correction')
+		_style_radius_plot(ax,title='Nonadiabatic reference model correction')
 		_add_stats_box(ax,[
 			f'N = {len(data)}',
 			f'R = {data["radius"].min():.2g}-{data["radius"].max():.2g} R_sun',
@@ -421,7 +421,7 @@ class all_plots:
 		fig,ax=plt.subplots(figsize=PLOT_FIGSIZE,dpi=PLOT_DPI)
 		ax.plot(data['radius'],data['value'],color=PLOT_COLORS['pysyd'],linewidth=1.1,alpha=0.45,label='radius-ordered sequence')
 		ax.scatter(data['radius'],data['value'],color=PLOT_COLORS['pysyd'],alpha=0.78,s=24,edgecolors='white',linewidths=0.35,label='pySYD')
-		_style_radius_plot(ax,title='pySYD correction for original sequence')
+		_style_radius_plot(ax,title='pySYD correction for nonadiabatic reference sequence')
 		_add_stats_box(ax,[
 			f'N = {len(data)}',
 			f'median f = {data["value"].median():.3f}',
@@ -458,7 +458,7 @@ class all_plots:
 			label='BAM'
 		)
 		_plot_binned_radius_summary(ax,data['radius'],data['fdnu_BAM_calc'],PLOT_COLORS['model'],'median trend',bins=20,min_count=2,alpha=0.10)
-		_style_radius_plot(ax,title='BAM correction for original sequence')
+		_style_radius_plot(ax,title='BAM correction for nonadiabatic reference sequence')
 		_add_stats_box(ax,[
 			f'N = {len(data)}',
 			f'filtered = {before-len(data)}',
@@ -479,7 +479,7 @@ class all_plots:
 		ax.plot(data['radius'],data['value'],color=PLOT_COLORS['asfgrid'],linewidth=1.6,alpha=0.75,label='ASFGrid raw')
 		ax.scatter(data['radius'],data['value'],color=PLOT_COLORS['asfgrid'],alpha=0.64,s=18,edgecolors='white',linewidths=0.3)
 		ax.plot(data['radius'],data['inverted'],color='#006d2c',linewidth=1.1,alpha=0.65,linestyle='--',label='inverted convention')
-		_style_radius_plot(ax,title='ASFGrid correction for original sequence')
+		_style_radius_plot(ax,title='ASFGrid correction for nonadiabatic reference sequence')
 		_add_stats_box(ax,[
 			f'N = {len(data)}',
 			f'raw median = {data["value"].median():.4f}',
@@ -1845,9 +1845,9 @@ class all_plots:
 		]
 		for column,label,color in series:
 			_plot_binned_radius_summary(axes[0,0],li_table['radius'],li_table[column],color,label,bins=48,min_count=20,linewidth=2.0,alpha=0.13)
-		axes[0,0].plot(pysyd['radius'],pysyd['fdnu_pysyd'],color='#1769aa',linewidth=1.2,linestyle='--',label='original nonad pySYD')
+		axes[0,0].plot(pysyd['radius'],pysyd['fdnu_pysyd'],color='#1769aa',linewidth=1.2,linestyle='--',label='nonadiabatic reference pySYD')
 		axes[0,0].plot(literature['radius'],literature['fdnustdlit'],color='#343a40',linewidth=1.2,linestyle='--',label='standard literature')
-		axes[0,0].plot(asf['radius'],asf['asf_fdnu'],color='#238b45',linewidth=1.2,linestyle=':',label='original ASFGrid')
+		axes[0,0].plot(asf['radius'],asf['asf_fdnu'],color='#238b45',linewidth=1.2,linestyle=':',label='nonadiabatic reference ASFGrid')
 		axes[0,0].scatter(gaia['radius_gaia'],gaia['fdnu_observed'],color=PLOT_COLORS['apokasc'],s=8,alpha=0.22,edgecolors='none',label='APOKASC-3 observed')
 		axes[0,0].set_xscale('log'); axes[0,0].set_xlabel(r'Radius ($R_\odot$)'); axes[0,0].set_ylabel(r'$f_{\Delta\nu}$'); axes[0,0].set_title('All correction tracks')
 		axes[0,0].legend(loc='best',fontsize=7.4,ncol=2); axes[0,0].grid(True,color='#d7dce2',linestyle=':',linewidth=0.6)
@@ -1859,9 +1859,9 @@ class all_plots:
 		lit_high=literature[literature['radius']>=radius_cut]
 		asf_high=asf[asf['radius']>=radius_cut]
 		gaia_high=gaia[gaia['radius_gaia']>=radius_cut]
-		axes[0,1].plot(pysyd_high['radius'],pysyd_high['fdnu_pysyd'],color='#1769aa',linewidth=1.2,linestyle='--',label='original nonad pySYD')
+		axes[0,1].plot(pysyd_high['radius'],pysyd_high['fdnu_pysyd'],color='#1769aa',linewidth=1.2,linestyle='--',label='nonadiabatic reference pySYD')
 		axes[0,1].plot(lit_high['radius'],lit_high['fdnustdlit'],color='#343a40',linewidth=1.2,linestyle='--',label='standard literature')
-		axes[0,1].plot(asf_high['radius'],asf_high['asf_fdnu'],color='#238b45',linewidth=1.2,linestyle=':',label='original ASFGrid')
+		axes[0,1].plot(asf_high['radius'],asf_high['asf_fdnu'],color='#238b45',linewidth=1.2,linestyle=':',label='nonadiabatic reference ASFGrid')
 		axes[0,1].errorbar(gaia_high['radius_gaia'],gaia_high['fdnu_observed'],yerr=gaia_high['fdnu_observed_err'],fmt='o',color=PLOT_COLORS['apokasc'],ecolor='#b9a2c4',markersize=3.2,alpha=0.55,elinewidth=0.4,capsize=0,label='APOKASC-3 observed')
 		axes[0,1].set_xscale('log'); axes[0,1].set_xlabel(r'Radius ($R_\odot$)'); axes[0,1].set_ylabel(r'$f_{\Delta\nu}$'); axes[0,1].set_title(rf'High-radius comparison ($R\geq{radius_cut:g}R_\odot$)')
 		axes[0,1].set_ylim(0.8,1.7); axes[0,1].legend(loc='best',fontsize=7.4); axes[0,1].grid(True,color='#d7dce2',linestyle=':',linewidth=0.6)
@@ -1876,9 +1876,9 @@ class all_plots:
 		axes[1,0].legend(loc='best',fontsize=8); axes[1,0].grid(True,color='#d7dce2',linestyle=':',linewidth=0.6)
 
 		axes[1,1].scatter(gaia['radius_gaia'],gaia['fdnu_observed'],color=PLOT_COLORS['apokasc'],s=10,alpha=0.28,edgecolors='none',label='APOKASC-3 observed')
-		axes[1,1].plot(pysyd['radius'],pysyd['fdnu_pysyd'],color=PLOT_COLORS['pysyd'],linewidth=1.5,label='original nonad pySYD')
+		axes[1,1].plot(pysyd['radius'],pysyd['fdnu_pysyd'],color=PLOT_COLORS['pysyd'],linewidth=1.5,label='nonadiabatic reference pySYD')
 		axes[1,1].plot(literature['radius'],literature['fdnustdlit'],color='#343a40',linewidth=1.4,label='standard literature')
-		axes[1,1].plot(asf['radius'],asf['asf_fdnu'],color=PLOT_COLORS['asfgrid'],linewidth=1.3,label='original ASFGrid')
+		axes[1,1].plot(asf['radius'],asf['asf_fdnu'],color=PLOT_COLORS['asfgrid'],linewidth=1.3,label='nonadiabatic reference ASFGrid')
 		axes[1,1].axvline(radius_cut,color='#c81d4f',linestyle=':',linewidth=1.0)
 		axes[1,1].set_xscale('log'); axes[1,1].set_xlabel(r'Radius ($R_\odot$)'); axes[1,1].set_ylabel(r'$f_{\Delta\nu}$'); axes[1,1].set_title('External Gaia/APOKASC context')
 		axes[1,1].legend(loc='best',fontsize=8); axes[1,1].grid(True,color='#d7dce2',linestyle=':',linewidth=0.6)
@@ -1918,9 +1918,9 @@ class all_plots:
 		for name,(column,color) in li_curves.items():
 			binned=_binned_radius_summary(li_table['radius'],li_table[column],bins=60,min_count=20)
 			candidate_sources[name]=(binned['radius_median'].to_numpy(),binned['value_median'].to_numpy(),color)
-		candidate_sources['original nonad pySYD']=(pysyd['radius'].to_numpy(),pysyd['fdnu_pysyd'].to_numpy(),'#1769aa')
+		candidate_sources['nonadiabatic reference pySYD']=(pysyd['radius'].to_numpy(),pysyd['fdnu_pysyd'].to_numpy(),'#1769aa')
 		candidate_sources['standard literature']=(literature['radius'].to_numpy(),literature['fdnustdlit'].to_numpy(),'#343a40')
-		candidate_sources['original ASFGrid']=(asf['radius'].to_numpy(),asf['asf_fdnu'].to_numpy(),'#238b45')
+		candidate_sources['nonadiabatic reference ASFGrid']=(asf['radius'].to_numpy(),asf['asf_fdnu'].to_numpy(),'#238b45')
 		metrics=[]
 		for name,(track_radius,track_fdnu,color) in candidate_sources.items():
 			order=np.argsort(track_radius)
@@ -2405,7 +2405,7 @@ class all_plots:
 		fig,axes=plt.subplots(2,2,figsize=(13,10),dpi=300)
 		ax_fdnu,ax_jump,ax_offset,ax_window=axes.ravel()
 
-		ax_fdnu.scatter(table['radius'],table['fdnu_nonad_model'],color='black',s=12,alpha=0.55,edgecolors='none',label='original nonad model')
+		ax_fdnu.scatter(table['radius'],table['fdnu_nonad_model'],color='black',s=12,alpha=0.55,edgecolors='none',label='nonadiabatic reference model')
 		ax_fdnu.scatter(table['radius'],table['fdnu_nonad_pysyd'],color='tab:blue',s=18,alpha=0.65,edgecolors='none',label='pySYD on nonad spectra')
 		ax_fdnu.scatter(table['radius'],table['fdnu_asfgrid_inverted'],color='tab:green',s=16,alpha=0.55,edgecolors='none',label='ASFGrid inverted')
 		if not cases.empty:
@@ -2413,7 +2413,7 @@ class all_plots:
 		ax_fdnu.set_xscale('log')
 		ax_fdnu.set_xlabel(r'Radius ($R_\odot$)')
 		ax_fdnu.set_ylabel(r'$f_{\Delta\nu}$')
-		ax_fdnu.set_title('Original nonad sequence')
+		ax_fdnu.set_title('Nonadiabatic reference sequence')
 		ax_fdnu.grid(True,color='lightgray',linestyle='--',linewidth=0.7,alpha=0.8)
 		ax_fdnu.legend(loc='best',fontsize=8,framealpha=0.9)
 
@@ -2442,7 +2442,7 @@ class all_plots:
 		ax_offset.set_xscale('log')
 		ax_offset.set_xlabel(r'Radius ($R_\odot$)')
 		ax_offset.set_ylabel('fractional offset of pySYD nonad')
-		ax_offset.set_title('Offsets within the original sequence')
+		ax_offset.set_title('Offsets within the nonadiabatic reference sequence')
 		ax_offset.grid(True,color='lightgray',linestyle='--',linewidth=0.7,alpha=0.8)
 		ax_offset.legend(loc='best',fontsize=8,framealpha=0.9)
 
@@ -2472,7 +2472,7 @@ class all_plots:
 		fig,axes=plt.subplots(2,2,figsize=(13,10),dpi=300)
 		ax_context,ax_spectrum,ax_zoom,ax_bar=axes.ravel()
 
-		ax_context.scatter(table['radius'],table['fdnu_nonad_model'],color='black',s=12,alpha=0.45,edgecolors='none',label='original nonad model')
+		ax_context.scatter(table['radius'],table['fdnu_nonad_model'],color='black',s=12,alpha=0.45,edgecolors='none',label='nonadiabatic reference model')
 		ax_context.scatter(table['radius'],table['fdnu_nonad_pysyd'],color='tab:blue',s=16,alpha=0.6,edgecolors='none',label='pySYD on nonad spectra')
 		ax_context.scatter(table['radius'],table['fdnu_asfgrid_inverted'],color='tab:green',s=14,alpha=0.5,edgecolors='none',label='ASFGrid inverted')
 		ax_context.scatter([row['radius']],[row['fdnu_nonad_pysyd']],facecolors='none',edgecolors='crimson',s=160,linewidths=2.2,zorder=6)
@@ -2516,7 +2516,7 @@ class all_plots:
 
 		row_index=int(table.index[table['ID']==row['ID']][0])
 		zoom=table.iloc[max(0,row_index-5):min(len(table),row_index+6)].copy()
-		ax_zoom.plot(zoom['radius'],zoom['fdnu_nonad_model'],color='black',marker='o',markersize=3,linewidth=1.0,label='original nonad model')
+		ax_zoom.plot(zoom['radius'],zoom['fdnu_nonad_model'],color='black',marker='o',markersize=3,linewidth=1.0,label='nonadiabatic reference model')
 		ax_zoom.plot(zoom['radius'],zoom['fdnu_nonad_pysyd'],color='tab:blue',marker='o',markersize=3,linewidth=1.0,label='pySYD on nonad spectra')
 		ax_zoom.plot(zoom['radius'],zoom['fdnu_asfgrid_inverted'],color='tab:green',marker='o',markersize=3,linewidth=1.0,label='ASFGrid inverted')
 		ax_zoom.scatter([row['radius']],[row['fdnu_nonad_pysyd']],facecolors='none',edgecolors='crimson',s=140,linewidths=2.0,zorder=6)
@@ -2564,9 +2564,9 @@ class all_plots:
 			original_table=self.original_nonad_fdnu_table()
 		series=[]
 		original_sources=[
-			('Original nonad model','original_nonad','fdnu_nonad_model'),
+			('Nonadiabatic reference model','original_nonad','fdnu_nonad_model'),
 			('pySYD on nonad spectra','original_nonad','fdnu_nonad_pysyd'),
-			('Original ASFGrid inverted','original_reference','fdnu_asfgrid_inverted')
+			('Nonadiabatic reference ASFGrid inverted','original_reference','fdnu_asfgrid_inverted')
 		]
 		for source,family,column in original_sources:
 			if column in original_table.columns:
@@ -2614,9 +2614,9 @@ class all_plots:
 		fig,axes=plt.subplots(2,2,figsize=(13,10),dpi=300)
 		ax_raw,ax_binned,ax_offsets,ax_zoom=axes.ravel()
 		colors={
-			'Original nonad model':'black',
+			'Nonadiabatic reference model':'black',
 			'pySYD on nonad spectra':'tab:blue',
-			'Original ASFGrid inverted':'tab:green',
+			'Nonadiabatic reference ASFGrid inverted':'tab:green',
 			'Li reference':'gray',
 			'pySYD on Li spectra':'tab:orange',
 			'Li ASFGrid inverted':'mediumseagreen'
@@ -2745,8 +2745,8 @@ class all_plots:
 		binned=self.binned_nonad_reference_comparison(long_table)
 		binned.to_csv(self.path_nonad_reference_comparison_table,index=False)
 		comparison_summary=self.plot_nonad_reference_comparison(internal_table,long_table,binned)
-		print(f'Wrote original nonad pySYD diagnostics to {self.path_nonad_pysyd_internal_table}')
-		print(f'Wrote original nonad pySYD summary plot to {internal_summary}')
+		print(f'Wrote nonadiabatic reference pySYD diagnostics to {self.path_nonad_pysyd_internal_table}')
+		print(f'Wrote nonadiabatic reference pySYD summary plot to {internal_summary}')
 		for case_path in case_paths:
 			print(case_path)
 		print(f'Wrote nonad/reference long comparison to {self.path_nonad_reference_long_table}')
