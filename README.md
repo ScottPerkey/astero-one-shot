@@ -83,7 +83,7 @@ upstream projects:
 | pySYD | Automated measurements of global asteroseismic parameters and echelle diagnostics. | [GitHub repository](https://github.com/ashleychontos/pySYD), [documentation](https://pysyd.readthedocs.io/en/latest/index.html), [paper](https://arxiv.org/abs/2108.00582), [Zenodo release](https://zenodo.org/records/5140574) |
 | GYRE | Stellar oscillation calculations used by upstream model workflows. | [GitHub repository](https://github.com/rhdtownsend/gyre), [documentation](https://gyre.readthedocs.io/en/latest/), [paper](https://arxiv.org/abs/1309.4455) |
 | ASFGrid v0.0.6 | Additional asteroseismic correction calculations, accessed from the local `asfgrid_code/asfgrid_v0.0.6/` directory. | [Sharma et al. (2016)](https://doi.org/10.3847/0004-637X/822/1/15), [Stello & Sharma (2022)](https://doi.org/10.3847/2515-5172/ac8b12) |
-| BAM | Independent `f_Delta_nu` measurements through an external executable such as `fitdnu.sh`. | The exact astrophysical BAM repository or release used for this project must be supplied by the BAM installation source; unrelated projects with the same acronym should not be cited. |
+| BAM | Joel Zinn's Bayesian Asteroseismology data Modeling pipeline, used here for independent `f_Delta_nu` measurements through an external executable such as `fitdnu.sh`. | [Zinn et al. (2019), “The Bayesian Asteroseismology data Modeling pipeline and its application to K2 data”](https://doi.org/10.3847/1538-4357/ab43c0), [arXiv:1909.11927](https://arxiv.org/abs/1909.11927) |
 
 The citations above identify upstream software and publications; they do not
 claim that those projects are part of this repository. This project’s scripts
